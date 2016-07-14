@@ -57,11 +57,14 @@ quint16 JQChecksum::crc16ForModbus(const QByteArray &data)
         0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
     };
 
-    quint16 crc16 = 0xffff;
+    quint8 buf;
+    quint16 crc16 = 0xFFFF;
 
-    for ( int i = 0; i < data.size(); ++i )
+    for ( auto i = 0; i < data.size(); ++i )
     {
-        crc16 = ( crc16 >> 8 ) ^ crc16Table[ ( crc16 & 0xff ) ^ data.at( i ) ];
+        buf = data.at( i ) ^ crc16;
+        crc16 >>= 8;
+        crc16 ^= crc16Table[ buf ];
     }
 
     return crc16;
